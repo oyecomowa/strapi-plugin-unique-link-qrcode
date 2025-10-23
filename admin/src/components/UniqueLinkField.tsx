@@ -1,20 +1,28 @@
-import React, { useState, useEffect, useRef, ReactNode } from 'react';
+import React, { useState, useEffect, useRef, ReactNode, forwardRef } from 'react';
 import { Field, Flex, TextInput, Button, Box, Typography } from '@strapi/design-system';
 import { Duplicate } from '@strapi/icons';
 import QRCode from 'qrcode';
 import { Schema } from '@strapi/strapi';
 
-interface InputProps {
-  'aria-label'?: string;
-  autoComplete?: never;
-  disabled?: boolean;
-  hint?: ReactNode;
-  label?: ReactNode;
-  labelAction?: ReactNode;
+interface UniqueLinkFieldProps {
   name: string;
-  placeholder?: string;
+  label?: ReactNode;
+  value?: string;
+  onChange: (e: { target: { name: string; value: string; type: string } }) => void;
+  intlLabel?: { id: string; defaultMessage: string };
   required?: boolean;
-  options?: never;
+  attribute?: {
+    customField?: string;
+    options?: {
+      baseUrl?: string;
+    };
+  };
+  description?: { id: string; defaultMessage: string };
+  placeholder?: { id: string; defaultMessage: string };
+  error?: string;
+  hint?: string;
+  disabled?: boolean;
+  labelAction?: ReactNode;
   type:
     | Exclude<
         Schema.Attribute.Kind,
@@ -33,41 +41,9 @@ interface InputProps {
     | 'checkbox';
 }
 
-interface UniqueLinkFieldProps {
-  name: string;
-  value?: string;
-  onChange: (e: { target: { name: string; value: string; type: string } }) => void;
-  intlLabel?: { id: string; defaultMessage: string };
-  required?: boolean;
-  attribute?: {
-    customField?: string;
-    options?: {
-      baseUrl?: string;
-    };
-  };
-  description?: { id: string; defaultMessage: string };
-  placeholder?: { id: string; defaultMessage: string };
-  error?: string;
-  hint?: string;
-  disabled?: boolean;
-  labelAction?: React.ReactNode;
-}
+const UniqueLinkField = forwardRef<HTMLInputElement, UniqueLinkFieldProps>(
+  ({ name, required, value, hint, label, labelAction, error, attribute, intlLabel, placeholder, disabled, onChange, ...props }, ref) => {
 
-const UniqueLinkField: React.FC<UniqueLinkFieldProps> = ({
-  name,
-  value = '',
-  onChange,
-  intlLabel,
-  required = false,
-  attribute,
-  description,
-  placeholder,
-  error,
-  hint,
-  disabled = false,
-  labelAction,
-}) => {
-  const [qrCodeUrl, setQrCodeUrl] = useState<string>('');
   const [copySuccess, setCopySuccess] = useState<boolean>(false);
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
@@ -125,13 +101,8 @@ const UniqueLinkField: React.FC<UniqueLinkFieldProps> = ({
   };
 
   return (
-    <Field
-      name={name}
-      id={name}
-      required={required}
-      hint={hint || description?.defaultMessage}
-      error={error}
-    >
+    <Field.Root error={error} name={name} hint={hint} required={required}>
+      <Field.Label action={labelAction}>{label}</Field.Label>
       <Flex direction="column" alignItems="stretch" gap={4}>
         {/* Input field for unique ID */}
         <TextInput
@@ -143,6 +114,7 @@ const UniqueLinkField: React.FC<UniqueLinkFieldProps> = ({
           required={required}
           error={error}
           disabled={disabled}
+          {...props}
         />
 
         {/* Display full URL if value exists */}
@@ -159,9 +131,6 @@ const UniqueLinkField: React.FC<UniqueLinkFieldProps> = ({
               {/* URL display with copy button */}
               <Flex alignItems="center" gap={2}>
                 <Box flex="1">
-                  <Typography variant="omega" textColor="neutral600" fontWeight="semiBold">
-                    Generated Link:
-                  </Typography>
                   <Typography
                     variant="omega"
                     textColor="primary600"
@@ -186,20 +155,16 @@ const UniqueLinkField: React.FC<UniqueLinkFieldProps> = ({
 
               {/* QR Code */}
               <Box>
-                <Typography
-                  variant="omega"
-                  textColor="neutral600"
-                  fontWeight="semiBold"
-                  style={{ marginBottom: '8px', display: 'block' }}
-                >
-                  QR Code:
-                </Typography>
                 <canvas ref={canvasRef} style={{ maxWidth: '100%', height: 'auto' }} />
               </Box>
             </Flex>
           </Box>
         )}
       </Flex>
-    </Field>
+      <Field.Hint />
+      <Field.Error />
+    </Field.Root>
   );
-};
+});
+
+export default UniqueLinkField;

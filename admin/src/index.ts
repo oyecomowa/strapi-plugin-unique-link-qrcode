@@ -4,16 +4,6 @@ import { PluginIcon } from './components/PluginIcon';
 
 export default {
   register(app: any) {
-    app.addMenuLink({
-      to: `plugins/${PLUGIN_ID}`,
-      icon: PluginIcon,
-      intlLabel: {
-        id: `${PLUGIN_ID}.plugin.name`,
-        defaultMessage: PLUGIN_ID,
-      },
-      Component: () => import('./pages/App'),
-    });
-
     // Register custom field
     app.customFields.register({
       name: 'unique-link-qrcode',
@@ -29,7 +19,7 @@ export default {
       },
       icon: PluginIcon,
       components: {
-        Input: async () => import('./components/UniqueLinkField').then((module) => module.UniqueLinkField),
+        Input: async () => import('./components/UniqueLinkField'),
       },
       options: {
         base: [
@@ -56,6 +46,27 @@ export default {
           },
         ],
         advanced: [
+          {
+            sectionTitle: {
+              id: `${PLUGIN_ID}.unique-link-qrcode.options.advanced.required`,
+              defaultMessage: 'Required',
+            },
+            items: [
+              {
+                name: 'required',
+                type: 'boolean',
+                intlLabel: {
+                  id: `${PLUGIN_ID}.unique-link-qrcode.options.advanced.required.label`,
+                  defaultMessage: 'Required',
+                },
+                description: {
+                  id: `${PLUGIN_ID}.unique-link-qrcode.options.advanced.required.description`,
+                  defaultMessage: 'Make the link expiration required',
+                },
+                defaultValue: false,
+              },
+            ],
+          },
           {
             sectionTitle: {
               id: `${PLUGIN_ID}.unique-link-qrcode.options.advanced.regex`,
