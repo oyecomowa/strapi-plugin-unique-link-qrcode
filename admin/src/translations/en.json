@@ -1,1 +1,11 @@
-{}
+{
+  "unique-link-qrcode.plugin.name": "Unique Link QRCode",
+  "unique-link-qrcode.unique-link-qrcode.label": "Unique Link with QR Code",
+  "unique-link-qrcode.unique-link-qrcode.description": "Generate a unique link and QR code from a unique ID",
+  "unique-link-qrcode.options.advanced.settings": "Settings",
+  "unique-link-qrcode.options.baseUrl.label": "Base URL",
+  "unique-link-qrcode.options.baseUrl.description": "The base URL for generating links (e.g., https://example.com)",
+  "unique-link-qrcode.options.advanced.regex": "Validation",
+  "unique-link-qrcode.options.regex.label": "RegExp pattern",
+  "unique-link-qrcode.options.regex.description": "Validate the unique ID with a regular expression"
+}
