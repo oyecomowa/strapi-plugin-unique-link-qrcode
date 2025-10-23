@@ -1,6 +1,13 @@
 {
   "version": "0.1.3",
-  "keywords": [],
+  "keywords": [
+    "strapi",
+    "strapi-plugin",
+    "qrcode",
+    "unique-link",
+    "custom-field",
+    "strapi5"
+  ],
   "type": "commonjs",
   "exports": {
     "./package.json": "./package.json",
@@ -28,7 +35,11 @@
     "watch:link": "strapi-plugin watch:link",
     "verify": "strapi-plugin verify",
     "test:ts:front": "run -T tsc -p admin/tsconfig.json",
-    "test:ts:back": "run -T tsc -p server/tsconfig.json"
+    "test:ts:back": "run -T tsc -p server/tsconfig.json",
+    "prepublishOnly": "yarn build",
+    "release:patch": "npm version patch && npm publish && git push --follow-tags",
+    "release:minor": "npm version minor && npm publish && git push --follow-tags",
+    "release:major": "npm version major && npm publish && git push --follow-tags"
   },
   "dependencies": {
     "@strapi/design-system": "^2.0.0-rc.30",
